@@ -1,8 +1,8 @@
-import "@/styles/globals.css";
 import gsap from "gsap";
 import Tempus from "tempus";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import dynamic from "next/dynamic";
+import "@/styles/globals.css";
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
