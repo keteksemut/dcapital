@@ -1,5 +1,3 @@
-'use client'
-
 import { useFrame } from '@darkroom.engineering/hamo';
 import { useEffect, useMemo, useRef } from 'react';
 import { useWindowSize } from 'react-use';
