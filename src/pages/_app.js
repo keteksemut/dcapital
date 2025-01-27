@@ -1,7 +1,8 @@
 import { useDebug } from "@darkroom.engineering/hamo";
 import { useState, useEffect } from "react";
+import FixFoucStyles from "@/lib/fixFoucStyles";
 import { useStore } from "@/lib/store/useStore";
-import { Curtain } from "@/components/curtain";
+import Curtain from "@/components/curtain";
 import useReadyCheck from "@/hook/useReadyCheck";
 import gsap from "gsap";
 import Tempus from "tempus";
@@ -113,69 +114,72 @@ if (typeof window !== 'undefined') {
 }
 
 export default function App({ Component, pageProps, headerData, footerData }) {
-  const debug = useDebug();
-  const a = useStore(({ lenis }) => lenis);
-  const o = useStore(({ overflow }) => overflow);
-  const u = useStore((e) => e.setHeaderData);
-  const l = useStore((e) => e.setFooterData);
-  const propsCheck = useStore((state) => ({
-    headerData: state.headerData,
-    footerData: state.footerData
-  }));
-  const [c, d] = useState(false);
-  const m = useReadyCheck();
+  // Apply FOUC fix
+  // FixFoucStyles();
 
-  if (!c) {
-    u(headerData);
-    l(footerData);
-    d(true);
+  // Hooks
+  const debug = useDebug();
+  const lenis = useStore(({ Lenis }) => Lenis);
+  const overflow = useStore(({ overflow }) => overflow);
+  const setHeaderData = useStore(state => state.setHeaderData);
+  const setFooterData = useStore(state => state.setFooterData);
+  const [initialized, setInitialized] = useState(false);
+  const isReady = useReadyCheck();
+
+  // Initialize header and footer data
+  if (!initialized) {
+    setHeaderData(headerData);
+    setFooterData(footerData);
+    setInitialized(true);
   }
 
-  // c || (
-  //   u(headerData),
-  //   l(footerData),
-  //   d(true)
-  // )
-
+  // Handle overflow changes
   useEffect(() => {
-    if (o) {
-      a?.start();
+    if (overflow) {
+      lenis?.start();
       document.documentElement.style.removeProperty("overflow");
     } else {
-      a?.stop();
+      lenis?.stop();
       document.documentElement.style.setProperty("overflow", "hidden");
     }
-  }, [a, o]);
+  }, [lenis, overflow]);
 
+  // Refresh ScrollTrigger when lenis updates
   useEffect(() => {
-    a && ScrollTrigger.refresh()
-  }, [a]);
+    if (lenis) {
+      ScrollTrigger.refresh();
+    }
+  }, [lenis]);
 
+  // Add loaded class when ready
   useEffect(() => {
-    m && document.documentElement.classList.add("loaded")
-  }, [m])
+    if (isReady) {
+      document.documentElement.classList.add("loaded");
+    }
+  }, [isReady]);
 
+  // Set ScrollTrigger defaults
   ScrollTrigger.defaults({
-    markers: false,
+    markers: false
   });
-
-  useEffect(() => {
-    console.log("Props check:", propsCheck); // Logs directly or JSON.stringify(propsCheck) for a stringified version
-  }, [propsCheck]);
 
   return (
     <>
       <Leva hidden={!debug} />
-      {debug &&
+      {debug && (
         <>
           <GridDebugger />
           <Stats />
-        </>}
+        </>
+      )}
       <RealViewport />
       <Curtain
         Component={Component}
         pageProps={pageProps}
       />
+      {/* <Curtain>
+        <Component {...pageProps} />
+      </Curtain> */}
     </>
-  )
-};
+  );
+}

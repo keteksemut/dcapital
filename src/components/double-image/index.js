@@ -1,11 +1,12 @@
 import { ImageReveal } from "../image-reveal";
+import cn from "clsx";
 import st from "./double-image.module.css";
 
 export function DoubleImage({ images, inverted = !1 }) {
 
     return (
         <div
-            className={`${st["double-image"]} layout-grid ${inverted && st.inverted}`}
+            className={cn(st["double-image"], "layout-grid", inverted && st.inverted)}
         >
             <div className={st.image}>
                 <ImageReveal

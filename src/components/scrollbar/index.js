@@ -1,5 +1,5 @@
 import { useWindowSize } from 'react-use';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useStore } from '@/lib/store/useStore';
 import { clamp } from '@/lib/maths';
 import useMeasure from "react-use-measure";
@@ -16,11 +16,11 @@ export function Scrollbar() {
     const [thumbMeasureRef, { height: thumbHeight }] = useMeasure();
     
     // Calculate thumb size based on content and window height
-    const calculateThumbHeight = () => {
+    const calculateThumbHeight = useCallback(() => {
         if (!lenis || !innerHeight) return thumbHeight;
         const viewportRatio = height / (lenis.limit + height);
         return Math.max(innerHeight * viewportRatio, 50);
-    };
+    }, [lenis, innerHeight, height, thumbHeight]);
 
     // Handle scroll updates
     useScroll(({ scroll, limit }) => {
@@ -69,7 +69,7 @@ export function Scrollbar() {
             window.removeEventListener('pointermove', handleMove);
             window.removeEventListener('pointerup', handleUp);
         };
-    }, [isDragging, lenis, innerHeight, height, width]);
+    }, [isDragging, lenis, innerHeight, height]);
 
     const handlePointerDown = (e) => {
         e.preventDefault();
