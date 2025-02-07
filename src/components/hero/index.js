@@ -1,4 +1,5 @@
 import { useSlots } from "@darkroom.engineering/hamo";
+import cn from "clsx";
 import st from "./hero.module.css";
 
 function Title() {
@@ -20,18 +21,18 @@ function Hero({ className, inverted = false, appear, children }) {
 
     return (
         <div
-            className={[
+            className={cn(
                 st.hero,
                 'layout-grid',
                 className,
                 inverted && st.inverted,
                 appear && st.appear
-            ].filter(Boolean).join(' ')}
+            )}
         >
-            <div className={`${st.border} ${st.top}`} />
-            <div className={`${st.border} ${st.bottom}`} />
+            <div className={cn(st.border, st.top)} />
+            <div className={cn(st.border, st.bottom)} />
 
-            <div className={`${st.title} h1`}>
+            <div className={cn(st.title, "h1")}>
                 {title}
             </div>
 
@@ -39,7 +40,7 @@ function Hero({ className, inverted = false, appear, children }) {
                 <div className={st.cta}>
                     {cta}
                 </div>
-                <div className={`${st.description} p`}>
+                <div className={cn(st.description, "p")}>
                     {description}
                 </div>
             </aside>

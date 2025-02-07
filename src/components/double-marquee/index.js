@@ -6,7 +6,7 @@ import st from "./double-marquee.module.css";
 
 const Parallax = dynamic(() => import('../parallax').then(({ Parallax }) => Parallax), { ssr: false });
 
-export function DoubleMarqueeMedia({ media, className, parallaxDirection }) {
+export function Media({ media, className, parallaxDirection }) {
 
     return (
         <Parallax
@@ -28,7 +28,7 @@ export const DoubleMarquee = ({ children, topText, bottomText, className }) => {
         threshold: .4,
         once: !0
     })
-        , u = Array.isArray(children) ? children.filter(e => e.type === DoubleMarqueeMedia) : [[children].find(e => e.type === DoubleMarqueeMedia)];
+        , u = Array.isArray(children) ? children.filter(e => e.type === Media) : [[children].find(e => e.type === Media)];
 
     return (
         <section
@@ -36,7 +36,7 @@ export const DoubleMarquee = ({ children, topText, bottomText, className }) => {
             ref={c}
         >
             {u.map((e, t) => (
-                <DoubleMarqueeMedia
+                <Media
                     key={`media-${t}`}
                     media={e?.props.media}
                     className={e?.props.className}
@@ -83,3 +83,5 @@ export const DoubleMarquee = ({ children, topText, bottomText, className }) => {
         </section>
     );
 };
+
+DoubleMarquee.Media = Media;

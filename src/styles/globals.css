@@ -1,17 +1,4 @@
-.page-transition_curtain__oJNuC {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  background-color: var(--theme-primary,var(--black));
-  transform: scaleY(0);
-  will-change: transform
-}
 
-@media(max-width: 800px) {
-  .page-transition_curtain__oJNuC {
-      display:none
-  }
-}
 
 :where(:not(html,iframe,canvas,img,svg,video,audio):not(svg *,symbol *)) {
   all: unset;

@@ -1,5 +1,6 @@
 import { useIntersection } from "react-use";
 import { useRef } from "react";
+import cn from "clsx";
 import st from "./marquee.module.css";
 
 export const Marquee = ({ children, repeat = 2, duration = 5, offset = 0, inverted = !1, className, animationStart = !0, ..._ }) => {
@@ -13,7 +14,12 @@ export const Marquee = ({ children, repeat = 2, duration = 5, offset = 0, invert
         <div
             ref={h}
             {..._}
-            className={`${className} ${st.marquee} ${inverted && st.inverted} ${p?.isIntersecting ? "running" : ""}`}
+            className={cn(
+                className, 
+                st.marquee, 
+                { [st.inverted]: inverted }, 
+                { running: h?.isIntersecting }
+              )}
             style={{
                 "--duration": `${duration}s`,
                 "--offset": `${offset % 100}%`,

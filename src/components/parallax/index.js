@@ -9,39 +9,37 @@ export function Parallax({ className, children, speed = 1, id = "parallax", posi
         , { width } = useWindowSize();
 
     useEffect(() => {
-        const e = width * speed * .1
-            , r = gsap.matchMedia();
-        return f.current = gsap.timeline({
-            scrollTrigger: {
-                id: id,
-                trigger: "top" === position ? document.body : s.current,
-                scrub: !0,
-                start: "top" === position ? "top top" : "top bottom",
-                end: "top" === position ? "+=100%" : "bottom top"
-            }
-        }).fromTo(a.current, {
-            y: "top" === position ? 0 : -e
-        }, {
-            y: e,
-            ease: "none"
-        }),
-            r.add({
-                reduceMotion: "(prefers-reduced-motion: reduce)"
-            }, e => {
-                let { reduceMotion: r } = e.conditions;
-                if (r) {
-                    var t, n;
-                    null == f || null === (t = f.current) || void 0 === t || t.from(a.current, {
-                        y: 0
-                    }),
-                        null == f || null === (n = f.current) || void 0 === n || n.kill()
+        const offset = width * speed * 0.1;
+        const mediaQuery = gsap.matchMedia();
+        const scrollTriggerConfig = {
+            id,
+            trigger: position === "top" ? document.body : s.current,
+            scrub: true,
+            start: position === "top" ? "top top" : "top bottom",
+            end: position === "top" ? "+=100%" : "bottom top",
+        };
+
+        // Create GSAP timeline
+        f.current = gsap.timeline({ scrollTrigger: scrollTriggerConfig })
+            .fromTo(
+                a.current,
+                { y: position === "top" ? 0 : -offset },
+                { y: offset, ease: "none" }
+            );
+
+        // Handle reduced motion preference
+        mediaQuery.add(
+            { reduceMotion: "(prefers-reduced-motion: reduce)" },
+            (context) => {
+                if (context.conditions.reduceMotion && f.current) {
+                    f.current.from(a.current, { y: 0 });
+                    f.current.kill();
                 }
             }
-            ),
-            () => {
-                var e;
-                null == f || null === (e = f.current) || void 0 === e || e.kill()
-            }
+        );
+
+        // Cleanup function
+        return () => f.current?.kill();
     }, [id, speed, position, width]);
 
     return (

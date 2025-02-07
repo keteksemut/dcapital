@@ -14,11 +14,9 @@ export function ImageReveal({ once = !0, visible, delay = "0s", threshold = .2, 
             ref={u}
             className={cn(
                 st.wrapper,
-                visible === undefined
-                  ? (_.isIntersecting && st.visible)
-                  : (visible && st.visible),
-                hoverable && st.hoverable
-              )}
+                { [st.visible]: visible === undefined ? _.isIntersecting : visible },
+                { [st.hoverable]: hoverable }
+            )}
             style={{ "--delay": delay }}
         >
             <CustomImage {...m} alt={m.alt} />
